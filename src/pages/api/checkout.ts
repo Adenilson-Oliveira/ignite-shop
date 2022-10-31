@@ -3,7 +3,15 @@ import { stripe } from "../../lib/stripe";
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const priceId = 'price_1Lxx8yH0KqxSo09kNXlqoCA9'
+  const {priceId} = req.body
+
+  if (req.method !== "POST") { 
+    return res.status(400).json({error: "Method not allowed"})
+  }
+
+  if (!priceId) { 
+    return res.status(400).json({error: "Missing priceId"})
+  }
 
   const successUrl = `${process.env.NEXT_URL}/success`
   const cancelUrl = `${process.env.NEXT_URL}/`
