@@ -1,4 +1,6 @@
+import { GetStaticProps } from "next"
 import { useRouter } from "next/router"
+import { stripe } from "../../lib/stripe"
 import { ImageContainer, ProductContainer, ProductDetails } from "../../styles/pages/product"
 
 export default function Product() {
@@ -22,4 +24,17 @@ export default function Product() {
       </ProductDetails>
     </ProductContainer>
   )
+}
+
+export const getStaticProps: GetStaticProps<any, { id: string }> = async ({ params }) => {
+  const productId = params.id
+
+  const product = await stripe.products.retrieve(productId, {
+    expand: ['default_price']
+  })
+
+  return {
+    props: {},
+    revalidate: 60 * 60 * 1, // 1 hour
+  }
 }
