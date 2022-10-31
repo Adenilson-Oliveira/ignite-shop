@@ -3,6 +3,7 @@ import Image from "next/image"
 import Stripe from "stripe"
 import { stripe } from "../../lib/stripe"
 import { ImageContainer, ProductContainer, ProductDetails } from "../../styles/pages/product"
+import { useRouter } from "next/router"
 
 
 interface ProductProps {
@@ -16,6 +17,12 @@ interface ProductProps {
 }
 
 export default function Product({product}: ProductProps) {
+
+  const { isFallback } = useRouter()
+
+  if (isFallback) {
+    return <p> ...loading</p>
+  }
 
   return (
     <ProductContainer>
@@ -49,11 +56,13 @@ export default function Product({product}: ProductProps) {
 
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  // buscar os produtos mais vendidos ou acessados para não pesar o deployment
+
   return {
     paths: [
       { params: { id: 'prod_MhLqM9vRQPcLhI' } },
     ],
-    fallback: false
+    fallback: true,
   }
 }
 
@@ -67,6 +76,7 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({ para
     }
   }
 
+
   const productId = params.id
 
 
@@ -78,7 +88,6 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({ para
   const price = product.default_price as Stripe.Price
 
 
-  
 
   return {
     props: {
