@@ -6,6 +6,7 @@ import { ImageContainer, ProductContainer, ProductDetails } from "../../styles/p
 import Router, { useRouter } from "next/router"
 import axios from "axios"
 import { useState } from "react"
+import Head from "next/head"
 
 
 interface ProductProps {
@@ -56,27 +57,35 @@ export default function Product({product}: ProductProps) {
   }
 
   return (
-    <ProductContainer>
-      <ImageContainer>
-        <Image  src={product.imageUrl} width={480} height={520} alt=""/>
-      </ImageContainer>
+    <>
+      <Head>
+        <title>{product.name} | Ignite Shop</title>
+      </Head>
 
-      <ProductDetails>
-        <h1>{product.name}</h1>
-        <span>
-          {new Intl.NumberFormat('pt-BR', {
-                  style: 'currency',
-                  currency: 'BRL',
-                }).format(product.price)}
-        </span>
-        
-        <p>{product.description}</p>
-            
-        <button disabled={isCreatingCheckoutSession} onClick={handleBuyProduct}>
-          Comprar agora
-        </button>
-      </ProductDetails>
-    </ProductContainer>
+
+      <ProductContainer>
+        <ImageContainer>
+          <Image  src={product.imageUrl} width={480} height={520} alt=""/>
+        </ImageContainer>
+
+        <ProductDetails>
+          <h1>{product.name}</h1>
+          <span>
+            {new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  }).format(product.price)}
+          </span>
+          
+          <p>{product.description}</p>
+              
+          <button disabled={isCreatingCheckoutSession} onClick={handleBuyProduct}>
+            Comprar agora
+          </button>
+        </ProductDetails>
+      </ProductContainer>
+    </>
+    
   )
 }
 
